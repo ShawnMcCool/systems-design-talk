@@ -12,40 +12,38 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out deck
+      - name: Checkout talk
         uses: actions/checkout@v4
         with:
-          path: deck
+          path: talk
 
-      - name: Check out talk-framework
+      - name: Checkout talk-framework
         uses: actions/checkout@v4
         with:
           repository: ShawnMcCool/talk-framework
+          ref: main
           path: framework
 
-      - name: Set up Node
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Symlink deck into /content
-        run: sudo ln -sfT "${GITHUB_WORKSPACE}/deck" /content
+          node-version: 20
 
       - name: Install framework dependencies
+        run: npm install
         working-directory: framework
-        run: npm install --no-audit --no-fund
 
       - name: Build
+        run: npm run build
         working-directory: framework
         env:
-          NODE_ENV: production
-        run: npx vite build --base=/systems-design-talk/
+          CONTENT_DIR: ${{ github.workspace }}/talk
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

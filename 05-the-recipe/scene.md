@@ -14,6 +14,9 @@ title: The recipe
 +++
 - consider constraints
 +++
-- refine error model — exceptions, retries, race conditions
+- refine error model
+  - exceptions
+  - retries
+  - race conditions
 +++
 - walk through flows
