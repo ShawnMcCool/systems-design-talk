@@ -1,6 +1,6 @@
 title = "system-design-talk"
-author = ""
-framework_version = "0.5"
+author = "Shawn McCool"
+framework_version = "0.6"
 
 [palette]
 # Override framework default palette tokens here.

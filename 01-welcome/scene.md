@@ -1,10 +1,5 @@
 ---
-title: Welcome
+title: Shawn McCool
+type: section
+subtitle: https://shawnmc.cool
 ---
-
-# system-design-talk
-
-- edit this file to begin
-- `talk add <slug>` to add more scenes
-- `talk lint` to check your work
-- `talk serve` to see it in the browser

@@ -1,0 +1,64 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out deck
+        uses: actions/checkout@v4
+        with:
+          path: deck
+
+      - name: Check out talk-framework
+        uses: actions/checkout@v4
+        with:
+          repository: ShawnMcCool/talk-framework
+          path: framework
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Symlink deck into /content
+        run: sudo ln -sfT "${GITHUB_WORKSPACE}/deck" /content
+
+      - name: Install framework dependencies
+        working-directory: framework
+        run: npm install --no-audit --no-fund
+
+      - name: Build
+        working-directory: framework
+        env:
+          NODE_ENV: production
+        run: npx vite build --base=/systems-design-talk/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: framework/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
