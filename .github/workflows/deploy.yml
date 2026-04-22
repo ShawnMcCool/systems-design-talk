@@ -35,6 +35,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Symlink talk into /content
+        run: sudo ln -sfT "${GITHUB_WORKSPACE}/talk" /content
+
       - name: Install framework dependencies
         run: npm install
         working-directory: framework
@@ -42,8 +45,6 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: framework
-        env:
-          CONTENT_DIR: ${{ github.workspace }}/talk
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
